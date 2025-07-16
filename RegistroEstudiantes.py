@@ -33,7 +33,6 @@ while opcion != 4:
                 tarea = float(input("Nota de la Tarea del curso (0-100) : "))
                 parcial = float(input("Nota de el parcial del curso (0-100): "))
                 proyecto = float(input("Nota de la proyecto del curso (0-100): "))
-                promedio = (tarea+parcial+proyecto)/3
                 estudiantes[carnet] = {
                     "nombre": nombre,
                     "edad": edad,
@@ -54,6 +53,7 @@ while opcion != 4:
             print(f"Nombre: {datos['nombre']}")
             print(f"Edad: {datos['edad']}")
             print(f"Carrera: {datos['carrera']}")
+            print("Cursos inscritos:")
             print(f"nombre del curso: {datos['nombreCursoA']}")
             print(f"Punteo tarea: {datos['nombreCurso']['tarea']}")
             print(f"Punteo parcial: {datos['nombreCurso']['parcial']}")
@@ -61,14 +61,15 @@ while opcion != 4:
 
     if opcion == 3:
         print("=== Buscar estudiante por carnet ===")
-        buscando = int(input("ingrese el numero de carnet: "))
+        buscando = input("ingrese el numero de carnet: ")
         if buscando in estudiantes:
             estudiante = estudiantes[buscando]
             print("\nEstudiante encontrado:")
             print(f"Nombre: {estudiante['nombre']}")
             print(f"Edad: {estudiante['edad']}")
             print(f"Carrera: {estudiante['carrera']}")
-            print(f"curso: {estudiante['nombreCurso']}")
+            print("Cursos inscritos:")
+            print(f"nombre del curso: {estudiante['nombreCursoA']}")
             print(f"Punteo tarea: {estudiante['nombreCurso']['tarea']}")
             print(f"Punteo parcial: {estudiante['nombreCurso']['parcial']}")
             print(f"Punteo proyecto: {estudiante['nombreCurso']['proyecto']}")
