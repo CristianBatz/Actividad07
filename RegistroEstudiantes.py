@@ -7,7 +7,11 @@ while opcion != 4:
     print("2. Mostrar todos los estudiantes y sus cursos")
     print("3. Buscar estudiante por carnet")
     print("4. Salir")
-    opcion = int(input("Seleccione una opcion: "))
+    try:
+        opcion = int(input("Seleccione una opcion: "))
+    except ValueError:
+        print("Opcion no valida")
+        continue
 
     if opcion == 1:
         print("=== Registro ===")
@@ -15,40 +19,57 @@ while opcion != 4:
         while cantidad <= 0 or cantidad >= 100:
             print("Ha ingresado un numero fuera de los limites,vuelva a intentarlo")
             cantidad = int(input("Cantidad de estudiantes que desea registrar: "))
+
         for i in range(cantidad):
             carnet = input("Ingrese su numero de carnet: ")
             while carnet in estudiantes:
                 print("Ya hay un carnet con el mismo codigo,vuelva a intentarlo")
                 carnet = input("Ingrese su numero de carnet: ")
+
             nombre = input("Nombre completo del estudiante: ")
             edad = int(input("Edad: "))
             carrera = input("Carrera: ")
+
+            cursos = {}
             cantidadCurso = int(input("Cantidad de curso que desea registrar: "))
             while cantidadCurso <= 0 or cantidadCurso >= 50:
                 print("Ha ingresado un numero fuera de los limites,vuelva a intentarlo")
                 cantidadCurso = int(input("Cantidad de curso que desea registrar: "))
+
             for j in range(cantidadCurso):
-                nombreCursoA = input("Nombre completo del curso: ")
                 codigoCurso = input("Codigo del curso: ")
+                while codigoCurso in cursos:
+                    print("Ya se ha registrado este código de curso. Intente con otro.")
+                    codigoCurso = input("Codigo del curso: ")
+                nombreCursoA = input("Nombre completo del curso: ")
                 tarea = float(input("Nota de la Tarea del curso (0-100) : "))
+                while tarea < 0 or tarea > 100:
+                    print("Nota fuera de rango")
+                    tarea = float(input("Nota de la Tarea del curso (0-100) : "))
                 parcial = float(input("Nota de el parcial del curso (0-100): "))
+                while parcial < 0 or parcial > 100:
+                    print("Nota fuera de rango")
+                    parcial = float(input("Nota de el parcial del curso (0-100): "))
                 proyecto = float(input("Nota de la proyecto del curso (0-100): "))
+                while proyecto < 0 or proyecto > 100:
+                    print("Nota fuera de rango")
+                    proyecto = float(input("Nota del proyecto del curso (0-100): "))
                 promedio = (tarea + parcial + proyecto) / 3
-                estudiantes[carnet] = {
-                    "nombre": nombre,
-                    "edad": edad,
-                    "carrera": carrera,
-                    "codigoCurso": {
-                        "nombreCursoA": nombreCursoA,
-                        "tarea": tarea,
-                        "parcial": parcial,
-                        "proyecto": proyecto,
-                        "promedio": promedio
-                    }
-
+                cursos[codigoCurso] = {
+                    "nombreCursoA": nombreCursoA,
+                    "tarea": tarea,
+                    "parcial": parcial,
+                    "proyecto": proyecto,
+                    "promedio": promedio
                 }
+            estudiantes[carnet] = {
+                "nombre": nombre,
+                "edad": edad,
+                "carrera": carrera,
+                "cursos": cursos
+            }
 
-    if opcion == 2:
+    elif opcion == 2:
         print("=== Mostrar lista de Estudiantes y cursos ===")
         for carnet, datos in estudiantes.items():
             print(f"\nCarnet: {carnet}")
@@ -56,30 +77,38 @@ while opcion != 4:
             print(f"Edad: {datos['edad']}")
             print(f"Carrera: {datos['carrera']}")
             print("Cursos inscritos:")
-            for cursos in datos["codigoCurso"]:
-                print(f"nombre del curso: {datos['nombreCursoA']}")
-            print(f"Punteo tarea: {datos['nombreCurso']['tarea']}")
-            print(f"Punteo parcial: {datos['nombreCurso']['parcial']}")
-            print(f"Punteo proyecto: {datos['nombreCurso']['proyecto']}")
-            print(f"promedio: {datos['nombreCurso']['promedio']}")
+            for codigo, notas in datos["cursos"].items():
+                print(f"Codigo de curso: {codigo}")
+                print(f"Nombre del curso: {notas['nombreCursoA']}")
+                print(f"Punteo tarea: {notas['tarea']}")
+                print(f"Punteo parcial: {notas['parcial']}")
+                print(f"Punteo proyecto: {notas['proyecto']}")
+                print(f"Promedio: {notas['promedio']:.2f}")
 
-    if opcion == 3:
+    elif opcion == 3:
         print("=== Buscar estudiante por carnet ===")
-        buscando = input("ingrese el numero de carnet: ")
+        buscando = input("Ingrese el numero de carnet: ")
         if buscando in estudiantes:
             estudiante = estudiantes[buscando]
-            print("\nEstudiante encontrado:")
-            print(f"Nombre: {estudiante['nombre']}")
+            print("Estudiante encontrado")
+            print(f"\nNombre: {estudiante['nombre']}")
             print(f"Edad: {estudiante['edad']}")
             print(f"Carrera: {estudiante['carrera']}")
-            print("Cursos inscritos:")
-            print(f"nombre del curso: {estudiante['nombreCursoA']}")
-            print(f"Punteo tarea: {estudiante['nombreCurso']['tarea']}")
-            print(f"Punteo parcial: {estudiante['nombreCurso']['parcial']}")
-            print(f"Punteo proyecto: {estudiante['nombreCurso']['proyecto']}")
+            print("Cursos:")
+            for codigo, notas in estudiante["cursos"].items():
+                print(f"Codigo de curso: {codigo}")
+                print(f"Nombre del curso: {notas['nombreCursoA']}")
+                print(f"Punteo tarea: {notas['tarea']}")
+                print(f"Punteo parcial: {notas['parcial']}")
+                print(f"Punteo proyecto: {notas['proyecto']}")
+                print(f"Promedio: {notas['promedio']:.2f}")
         else:
             print("Estudiante no encontrado.")
 
-    if opcion == 4:
+    elif opcion == 4:
         print("=== Salir ===")
         print("Saliendo del programa")
+        break
+
+    else:
+        print("Opción fuera de rango. Intente nuevamente.")
